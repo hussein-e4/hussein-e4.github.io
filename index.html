@@ -3,44 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess.com - Premium Offer</title>
-    <meta name="referrer" content="unsafe-url">
+    <title>Security Research - Proof of Concept</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #312e2b; color: white; text-align: center; padding-top: 50px; }
-        .bait-content, .phishing-content { display: none; }
-        .login-box { background-color: #262421; padding: 40px; border-radius: 8px; width: 300px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .alert-message { color: #ff4d4d; font-size: 14px; margin-bottom: 20px; font-weight: bold; }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #4a4846; background-color: #312e2b; color: white; border-radius: 4px; }
-        button, .btn-link { width: 100%; padding: 15px; background-color: #81b64c; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; box-sizing: border-box; }
-        button:hover, .btn-link:hover { background-color: #95c45f; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            padding-top: 10vh; 
+            background-color: #f8f9fa; 
+            color: #333;
+        }
+        .warning-box { 
+            border: 3px solid #dc3545; 
+            display: inline-block; 
+            padding: 30px; 
+            border-radius: 12px; 
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+            max-width: 600px;
+        }
+        h1 { color: #dc3545; margin-top: 0; }
+        p { line-height: 1.6; font-size: 16px; }
+        .highlight { font-weight: bold; color: #0056b3; }
     </style>
 </head>
 <body>
-
-    <div id="bait" class="bait-content">
-        <h2>🎉 Exclusive Offer! 🎉</h2>
-        <p>Get 1 Year of Ad-Free Chess.com Premium!</p>
-        <a href="https://www.chess.com/no-ads" class="btn-link" style="width: 200px;">Claim Offer Now</a>
+    <div class="warning-box">
+        <h1>⚠️ Security Proof of Concept</h1>
+        <p>You have been redirected to this page due to a <b>Stored UI Redressing (Clickjacking)</b> vulnerability on <span class="highlight">pictSQUARE.net</span>.</p>
+        <p>You attempted to click a legitimate button (like "Favorite" or "Join Event"), but an invisible overlay intercepted your click.</p>
+        <p><i>Note to Security Team: If this were a real attack by a malicious actor, this page would be a highly convincing phishing clone designed to steal user credentials. No personal data was collected during this test.</i></p>
     </div>
-
-    <div id="phish" class="phishing-content">
-        <div class="login-box">
-            <h2>Login to continue</h2>
-            <div class="alert-message">Your session has expired. Please log in again to claim your offer.</div>
-            <input type="text" placeholder="Username, Phone, or Email">
-            <input type="password" placeholder="Password">
-            <button onclick="alert('🚨 CRITICAL IMPACT DEMONSTRATION 🚨\n\nThrough the Open Redirect vulnerability, the victim was seamlessly routed to this attacker-controlled page.\n\nIn a real-world attack, any username and password entered here would be sent directly to the hacker\'s server, leading to complete Account Takeover (ATO)!')">Log In</button>
-        </div>
-    </div>
-
-    <script>
-        if (document.referrer.includes("chess.com")) {
-            document.getElementById("phish").style.display = "block";
-        } else {
-            window.location.href = "https://www.chess.com/no-ads";
-        }
-    </script>
 </body>
-
 </html>
-
